@@ -1,0 +1,2 @@
+csvkit==0.5.0
+name-cleaver==0.5.2
