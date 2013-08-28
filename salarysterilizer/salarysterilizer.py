@@ -199,22 +199,31 @@ def process_csv(csv_data, template):
                 'received_date': template['received_date'],
             })
 
+        sys.stdout.write('File processed.\n')
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('filename', help='the salary csv file that needs cleaning')
     parser.add_argument('-g', '--generate_template',
-                        help='interactive console for generating a cleaning template',
+                        help='only generate a cleaning template (not execute it)',
                         action='store_true')
-    parser.add_argument('-t', '--template', help='the template file to use for cleaning')
+    parser.add_argument('-t', '--template', help='use a pre-existing template.json file')
     args = parser.parse_args()
 
     csv_data = prepare_csv_for_reading(args.filename)
 
-    if args.generate_template:
-        generate_template(csv_data['header'], csv_data['rows'], args.filename)
-        return False
+    if not args.template:
+        try:
+            with open('template.json'):
+                sys.stdout.write('You already have a template.json file! Pass it in using -t, or delete it to regenerate.\n')
+                return
+        except IOError:
+           generate_template(csv_data['header'], csv_data['rows'], args.filename)
 
-    process_csv(csv_data, json.load(open(args.template, 'rb')))
+    if args.generate_template:
+        return
+
+    process_csv(csv_data, json.load(open('template.json', 'rb')))
 
 
 if __name__ == '__main__':
