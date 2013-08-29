@@ -80,8 +80,8 @@ def generate_template(header, rows, filename):
         if category == 'agency':
             multi_agency_status = raw_input('Are multiple agencies represented in a column in this spreadsheet? (y/n)\n').lower()
 
-        if multi_agency_status != 'y':
-            continue
+            if multi_agency_status != 'y':
+                continue
 
         ids = raw_input('Which column index(es) represent an employee\'s {0}? (comma separated, in order)\n'.format(category))
         columns = [header[int(x)] for x in ids.split(',')]
@@ -92,7 +92,7 @@ def generate_template(header, rows, filename):
             'options': options
         }
 
-    if not column_matches['agency']:
+    if not 'agency' in column_matches:
         column_matches['entity_name'] = raw_input('Finally, what is the proper title for this entity? (e.g. Austin ISD)\n')
 
     column_matches['entity_type'] = raw_input('What type of entity is this? (e.g. School District)\n')
