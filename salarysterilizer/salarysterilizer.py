@@ -132,6 +132,8 @@ def salary(n, **kwargs):
 
 
 def hire_date(d, **kwargs):
+    if not d:
+        return None
     processed_date = datetime.strptime(d, kwargs['date_format']).date()
     return processed_date.strftime('%m/%d/%Y')
 
