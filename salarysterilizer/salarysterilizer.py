@@ -71,10 +71,17 @@ def column_config(category, columns, rows):
 def generate_template(header, rows, filename):
     column_matches = {}
 
-    for category in ('name', 'gender', 'title', 'department', 'hire_date', 'salary'):
+    for category in ('agency', 'name', 'gender', 'title', 'department', 'hire_date', 'salary'):
         sys.stdout.write('\n')
+
         for i, v in enumerate(header):
             sys.stdout.write('{0}: {1}\n'.format(i, v))
+
+        if category == 'agency':
+            multi_agency_status = raw_input('Are multiple agencies represented in a column in this spreadsheet? (y/n)\n').lower()
+
+        if multi_agency_status != 'y':
+            continue
 
         ids = raw_input('Which column index(es) represent an employee\'s {0}? (comma separated, in order)\n'.format(category))
         columns = [header[int(x)] for x in ids.split(',')]
@@ -85,7 +92,9 @@ def generate_template(header, rows, filename):
             'options': options
         }
 
-    column_matches['entity_name'] = raw_input('Finally, what is the proper title for this entity? (e.g. Austin ISD)\n')
+    if not column_matches['agency']:
+        column_matches['entity_name'] = raw_input('Finally, what is the proper title for this entity? (e.g. Austin ISD)\n')
+
     column_matches['entity_type'] = raw_input('What type of entity is this? (e.g. School District)\n')
     column_matches['received_date'] = raw_input('When was this data received from the agency? (e.g. 7/22/2013)\n')
 
@@ -184,13 +193,22 @@ def process_csv(csv_data, template):
         'received_date',
     ]
 
-    file_name = template['entity_name'].lower().replace(' ', '_')
+    if 'entity_name' in template:
+        file_name = template['entity_name'].lower().replace(' ', '_')
+    else:
+        file_name = raw_input('What should we call this file? (xxx.csv)\n')
 
     with open('{0}-ready.csv'.format(file_name), 'wb') as fo:
         writer = UnicodeCSVDictWriter(fo, standard_header)
         writer.writeheader()
 
         for row in csv_data['rows']:
+
+            if 'agency' in template:
+                entity_entry = entity(collect_cells(row, template['agency']['columns']))
+            else:
+                entity_entry = template['entity_name']
+
             writer.writerow({
                 'name': name(collect_cells(row, template['name']['columns']), **template['name']['options']),
                 'gender': gender(collect_cells(row, template['gender']['columns']), **template['gender']['options']),
@@ -198,7 +216,7 @@ def process_csv(csv_data, template):
                 'department': title_department(collect_cells(row, template['department']['columns']), **template['department']['options']),
                 'hire_date': hire_date(collect_cells(row, template['hire_date']['columns']), **template['hire_date']['options']),
                 'salary': salary(collect_cells(row, template['salary']['columns']), **template['salary']['options']),
-                'entity': template['entity_name'],
+                'entity': entity_entry,
                 'type': template['entity_type'],
                 'received_date': template['received_date'],
             })
