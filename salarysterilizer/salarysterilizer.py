@@ -35,7 +35,7 @@ def column_config(category, columns, rows):
     if category == 'title':
         remove_anything = raw_input('Do any characters need to be stripped from this string? (y/n)\n')
 
-        if remove_anything == 'Y':
+        if remove_anything.lower() == 'y':
             remove_before = int(raw_input('How many characters need to be removed from the beginning? (expects a number)\n'))
             remove_after = int(raw_input('How many characters need to be removed from the end? (expects a number)\n'))
 
@@ -48,7 +48,7 @@ def column_config(category, columns, rows):
     if category == 'department':
         remove_anything = raw_input('Do any characters need to be stripped from this string? (y/n)\n')
 
-        if remove_anything == 'Y':
+        if remove_anything.lower() == 'y':
             remove_before = int(raw_input('How many characters need to be removed from the beginning? (expects a number)\n'))
             remove_after = int(raw_input('How many characters need to be removed from the end? (expects a number)\n'))
 
