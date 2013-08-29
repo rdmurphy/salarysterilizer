@@ -163,7 +163,7 @@ def entity(s, **kwargs):
 def collect_cells(row, columns):
     payload = ''
     for column in columns:
-        payload += row[column] + ' '
+        payload += row[column].strip() + ' '
 
     return payload.strip()
 
