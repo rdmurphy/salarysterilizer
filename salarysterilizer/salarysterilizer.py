@@ -182,7 +182,9 @@ def process_csv(csv_data, template):
         'received_date',
     ]
 
-    with open('processed.csv', 'wb') as fo:
+    file_name = template['entity_name'].lower().replace(' ', '_')
+
+    with open('{0}-ready.csv'.format(file_name), 'wb') as fo:
         writer = UnicodeCSVDictWriter(fo, standard_header)
         writer.writeheader()
 
