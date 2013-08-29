@@ -137,11 +137,11 @@ def hire_date(d, **kwargs):
 
 
 def title_department(s, **kwargs):
-    if 'strip_from_begin' in kwargs:
-        s = s[kwargs['strip_from_begin']:]
+    if 'remove_before' in kwargs:
+        s = s[kwargs['remove_before']:]
 
-    if 'strip_from_end' in kwargs:
-        s = s[:-kwargs['strip_from_begin']]
+    if 'remove_after' in kwargs:
+        s = s[:-kwargs['remove_after']]
 
     return unicode(s.strip())
 
